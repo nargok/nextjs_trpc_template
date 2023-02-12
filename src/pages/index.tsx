@@ -1,14 +1,7 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
+import { NextPage } from 'next';
 
-const inter = Inter({ subsets: ['latin'] })
+const HomeViewPage: NextPage = () => {
+  return <div>home</div>;
+};
 
-export default function Home() {
-  return (
-    <>
-    <h1 className="text-3xl">Hello world</h1>
-    </>
-  )
-}
+export default HomeViewPage;
