@@ -74,4 +74,4 @@ export const appRouter = router({
   }),
 });
 
-export type AppRotuer = typeof appRouter;
+export type AppRouter = typeof appRouter;
