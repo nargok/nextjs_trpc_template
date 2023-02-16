@@ -3,30 +3,30 @@ import { NextPage } from 'next';
 import React, { useState } from 'react';
 import type { AppRouter } from '@/server/index';
 import { trpc } from '@/config/trpc/client';
+import { useRouter } from 'next/router';
 
 interface UserRegisterForm {
   name: string;
 }
-
 const UserRegisterViewPage: NextPage = () => {
+  const router = useRouter();
+
   const [state, setState] = useState<UserRegisterForm>({
     name: '',
   });
 
   const addPost = trpc.userCreate.useMutation({
     async onSuccess() {
-      // callback todo call user list query
+      router.push('/users');
     },
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.name);
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('onSubmit', state.name);
     type Input = inferProcedureInput<AppRouter['userCreate']>;
     const input: Input = {
       name: state.name,
