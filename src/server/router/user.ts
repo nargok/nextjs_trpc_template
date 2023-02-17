@@ -2,14 +2,7 @@ import { User } from '@/domain/model/user';
 import { router, publicProcedure } from '@/server/index';
 import { z } from 'zod';
 
-// const userList: User[] = [new User('1', 'Kato')];
-
-const userList: User[] = [
-  {
-    id: '1',
-    name: 'Tasuke',
-  },
-];
+const userList: User[] = [new User('1', 'Kato')];
 
 export const userRouter = router({
   userList: publicProcedure
