@@ -1,9 +1,11 @@
+import { ulid } from 'ulid';
+
 export class User {
   id: string;
   name: string;
 
-  constructor(id: string, name: string) {
-    this.id = id;
+  constructor(name: string) {
+    this.id = ulid();
     this.name = name;
   }
 }

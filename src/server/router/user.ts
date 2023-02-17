@@ -1,8 +1,10 @@
 import { User } from '@/domain/model/user';
 import { router, publicProcedure } from '@/server/index';
 import { z } from 'zod';
+import { UserRepositoryImpl } from '../infrastructure/repository/user';
 
-const userList: User[] = [new User('1', 'Kato')];
+const userList: User[] = [new User('Kato')];
+const userRepository = new UserRepositoryImpl();
 
 export const userRouter = router({
   userList: publicProcedure
@@ -21,8 +23,6 @@ export const userRouter = router({
       const limit = input.limit ?? 50;
       const { cursor } = input;
 
-      console.log('debug', userList);
-
       return userList;
     }),
   userById: publicProcedure
@@ -37,15 +37,7 @@ export const userRouter = router({
       return user;
     }),
   userCreate: publicProcedure.input(z.object({ name: z.string() })).mutation((req) => {
-    const id = `${Math.random()}`;
-
-    const user: User = {
-      id,
-      name: req.input.name,
-    };
-
-    userList.push(user);
-
-    return user;
+    const user = new User(req.input.name);
+    return userRepository.register(user);
   }),
 });
