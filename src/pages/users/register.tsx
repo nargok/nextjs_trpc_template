@@ -1,7 +1,7 @@
 import { inferProcedureInput } from '@trpc/server';
 import { NextPage } from 'next';
 import React, { useState } from 'react';
-import type { AppRouter } from '@/server/index';
+import type { AppRouter } from '@/server/router/_app';
 import { trpc } from '@/config/trpc/client';
 import { useRouter } from 'next/router';
 
@@ -15,7 +15,7 @@ const UserRegisterViewPage: NextPage = () => {
     name: '',
   });
 
-  const addPost = trpc.userCreate.useMutation({
+  const addPost = trpc.user.userCreate.useMutation({
     async onSuccess() {
       router.push('/users');
     },
@@ -27,7 +27,7 @@ const UserRegisterViewPage: NextPage = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    type Input = inferProcedureInput<AppRouter['userCreate']>;
+    type Input = inferProcedureInput<AppRouter['user']['userCreate']>;
     const input: Input = {
       name: state.name,
     };

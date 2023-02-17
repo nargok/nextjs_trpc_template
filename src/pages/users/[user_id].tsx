@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 const UserViewPage: NextPage = () => {
   const router = useRouter();
   const { user_id } = router.query;
-  const userQuery = trpc.userById.useQuery({ id: user_id });
+  const userQuery = trpc.user.userById.useQuery({ id: user_id });
 
   if (userQuery.error) {
     return <NextError title={userQuery.error.message} statusCode={userQuery.error.data?.httpStatus ?? 500} />;

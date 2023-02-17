@@ -3,7 +3,7 @@ import { createTRPCNext } from '@trpc/next';
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import { NextPageContext } from 'next';
 import superjson from 'superjson';
-import type { AppRotuer } from '@/server';
+import type { AppRouter } from '@/server/router/_app';
 
 function getBaseUrl() {
   if (typeof window !== 'undefined') {
@@ -28,7 +28,7 @@ export interface SSRContext extends NextPageContext {
  * A set of strongly-typed React hooks from your `AppRouter` type signature with `createReactQueryHooks`.
  * @link https://trpc.io/docs/react#3-create-trpc-hooks
  */
-export const trpc = createTRPCNext<AppRotuer, SSRContext>({
+export const trpc = createTRPCNext<AppRouter, SSRContext>({
   config({ ctx }) {
     /**
      * If you want to use SSR, you need to use the server's full URL
@@ -93,5 +93,5 @@ export const trpc = createTRPCNext<AppRotuer, SSRContext>({
   },
 });
 
-export type RouterInput = inferRouterInputs<AppRotuer>;
-export type RouterOutput = inferRouterOutputs<AppRotuer>;
+export type RouterInput = inferRouterInputs<AppRouter>;
+export type RouterOutput = inferRouterOutputs<AppRouter>;

@@ -1,14 +1,12 @@
 import { trpc } from '@/config/trpc/client';
 import { User } from '@/domain/model/user';
 import { NextPage } from 'next';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 const UserListViewPage: NextPage = () => {
   const router = useRouter();
-  const [allUsers, setAllUsers] = useState(Array<User>());
 
-  const usersQuery = trpc.userList.useInfiniteQuery(
+  const usersQuery = trpc.user.userList.useInfiniteQuery(
     {
       limit: 5,
     },
