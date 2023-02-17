@@ -1,0 +1,19 @@
+version: '3'
+services:
+  db:
+    platform: linux/x86_64
+    image: mysql:8.0.19
+    ports:
+      - 13306:3306
+    volumes:
+      - db-store:/var/lib/mysql
+      - ./logs:/var/log/mysql
+      - ./dockerfiles/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      - MYSQL_DATABASE=sample
+      - MYSQL_USER=sample
+      - MYSQL_PASSWORD=pass
+      - MYSQL_ROOT_PASSWORD=pass
+      - TZ="Asia/Tokyo"
+volumes:
+  db-store:
