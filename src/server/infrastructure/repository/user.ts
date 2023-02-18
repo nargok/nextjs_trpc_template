@@ -1,7 +1,9 @@
 import { Prisma } from '@prisma/client';
-import { User } from '@/domain/model/user';
+import { UserModel } from '@/domain/model/user';
 import { UserRepository } from '@/domain/repository/user';
 import { prisma } from '@/server/prisma';
+import { User } from '@prisma/client';
+import type { UserCreateInput } from '@prisma/client/index';
 
 /**
  * Default selector for Post.
@@ -15,13 +17,40 @@ const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
   updatedAt: true,
 });
 
-export class UserRepositoryImpl extends UserRepository {
-  async register(user: User): Promise<User> {
-    const result = await prisma.user.create({
-      data: user,
+export class UserRepositoryImpl implements UserRepository {
+  async list(): Promise<UserModel[]> {
+    // const limit = input.limit ?? 50;
+    // const { cursor } = input;
+    const limit = 50;
+    const cursor = undefined;
+
+    const users = await prisma.user.findMany({
+      select: defaultUserSelect,
+      take: limit + 1,
+      where: {},
+      cursor: cursor ? { id: cursor } : undefined,
+      orderBy: { createdAt: 'desc' },
+    });
+
+    // TODO むずい。。
+    // const result = users.map((user) => User.reconstruct(user.id, user.name));
+    // return result;
+    return users;
+  }
+  async register(user: UserModel): Promise<UserModel> {
+    const data = {
+      id: user.getId,
+      name: user.getName,
+    };
+    const entity = await prisma.user.create({
+      data,
       select: defaultUserSelect,
     });
 
-    return result;
+    return this.toModel(entity);
+  }
+
+  private toModel(user: User): UserModel {
+    return UserModel.reconstruct(user.id, user.name);
   }
 }

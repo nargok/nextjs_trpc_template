@@ -1,9 +1,8 @@
-import { User } from '@/domain/model/user';
+import { UserModel } from '@/domain/model/user';
 import { router, publicProcedure } from '@/server/index';
 import { z } from 'zod';
 import { UserRepositoryImpl } from '../infrastructure/repository/user';
 
-const userList: User[] = [new User('Kato')];
 const userRepository = new UserRepositoryImpl();
 
 export const userRouter = router({
@@ -20,10 +19,11 @@ export const userRouter = router({
        * @see https://trpc.io/docs/useInfiniteQuery
        * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
        */
-      const limit = input.limit ?? 50;
-      const { cursor } = input;
+      // const limit = input.limit ?? 50;
+      // const { cursor } = input;
 
-      return userList;
+      // TODO limit cursorを渡す
+      return userRepository.list();
     }),
   userById: publicProcedure
     .input(
@@ -37,7 +37,7 @@ export const userRouter = router({
       return user;
     }),
   userCreate: publicProcedure.input(z.object({ name: z.string() })).mutation((req) => {
-    const user = new User(req.input.name);
+    const user = UserModel.create(req.input.name);
     return userRepository.register(user);
   }),
 });

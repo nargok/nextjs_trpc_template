@@ -1,5 +1,7 @@
-import { User } from '../model/user';
+import { UserModel } from '../model/user';
 
-export abstract class UserRepository {
-  abstract register(user: User): Promise<User>;
+export interface UserRepository {
+  list(): Promise<Array<UserModel>>;
+
+  register(user: UserModel): Promise<UserModel>;
 }

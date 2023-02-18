@@ -1,11 +1,26 @@
 import { ulid } from 'ulid';
 
-export class User {
-  id: string;
-  name: string;
+export class UserModel {
+  private constructor(private id: string, private name: string) {}
 
-  constructor(name: string) {
-    this.id = ulid();
-    this.name = name;
+  get getId(): string {
+    return this.id;
+  }
+
+  get getName(): string {
+    return this.name;
+  }
+
+  /**
+   * UserModelを新規作成します
+   * @param name
+   * @returns
+   */
+  static create(name: string): UserModel {
+    return new this(ulid(), name);
+  }
+
+  static reconstruct(id: string, name: string): UserModel {
+    return new this(id, name);
   }
 }
