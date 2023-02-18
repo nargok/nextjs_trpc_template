@@ -1,11 +1,8 @@
 import { UserModel } from '@/domain/model/user';
 import { router, publicProcedure } from '@/server/index';
-import { use } from 'react';
 import { z } from 'zod';
 import { UserUseCase } from '../application/user';
-import { UserRepositoryImpl } from '../infrastructure/repository/user';
 
-// const repository = new UserRepositoryImpl();
 const useCase = new UserUseCase();
 
 export const userRouter = router({
