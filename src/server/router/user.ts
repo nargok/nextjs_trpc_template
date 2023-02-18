@@ -3,7 +3,7 @@ import { router, publicProcedure } from '@/server/index';
 import { z } from 'zod';
 import { UserRepositoryImpl } from '../infrastructure/repository/user';
 
-const userRepository = new UserRepositoryImpl();
+const repository = new UserRepositoryImpl();
 
 export const userRouter = router({
   userList: publicProcedure
@@ -23,7 +23,7 @@ export const userRouter = router({
       // const { cursor } = input;
 
       // TODO limit cursorを渡す
-      return userRepository.list();
+      return repository.list();
     }),
   userById: publicProcedure
     .input(
@@ -33,11 +33,10 @@ export const userRouter = router({
     )
     .query(async ({ input }) => {
       const { id } = input;
-      const user = userList.find((u) => u.id === id);
-      return user;
+      return repository.find(id);
     }),
   userCreate: publicProcedure.input(z.object({ name: z.string() })).mutation((req) => {
     const user = UserModel.create(req.input.name);
-    return userRepository.register(user);
+    return repository.register(user);
   }),
 });

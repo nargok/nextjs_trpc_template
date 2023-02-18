@@ -18,6 +18,15 @@ const defaultUserSelect = Prisma.validator<Prisma.UserSelect>()({
 });
 
 export class UserRepositoryImpl implements UserRepository {
+  async find(id: string): Promise<UserModel> {
+    const entity = await prisma.user.findUniqueOrThrow({
+      where: { id },
+      select: defaultUserSelect,
+    });
+
+    return this.toModel(entity);
+  }
+
   async list(): Promise<UserModel[]> {
     // const limit = input.limit ?? 50;
     // const { cursor } = input;
