@@ -1,21 +1,12 @@
 import { trpc } from '@/config/trpc/client';
-import { User } from '@/domain/model/user';
+import { UserModel } from '@/domain/model/user';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
 const UserListViewPage: NextPage = () => {
   const router = useRouter();
-
-  const usersQuery = trpc.user.userList.useInfiniteQuery(
-    {
-      limit: 5,
-    },
-    {
-      getPreviousPageParam(lastPage) {
-        return lastPage.nextCursor;
-      },
-    },
-  );
+  const usersQuery = trpc.user.userList.useQuery({});
+  const { data } = usersQuery;
 
   const goToRegister = () => {
     router.push('/users/register');
@@ -33,7 +24,7 @@ const UserListViewPage: NextPage = () => {
     <div>
       <h1>ユーザー一覧</h1>
       <ul>
-        {usersQuery.data.pages[0].map((user: User) => (
+        {data?.userList.map((user: UserModel) => (
           <li key={user.id}>
             Name: {user.name}{' '}
             <span className='text-blue-600 hover:cursor-pointer' onClick={() => goToShow(user.id)}>

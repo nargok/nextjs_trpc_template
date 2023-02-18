@@ -3,7 +3,7 @@ import { UserModel } from '@/domain/model/user';
 import { UserRepository } from '@/domain/repository/user';
 import { prisma } from '@/server/prisma';
 import { User } from '@prisma/client';
-import type { UserCreateInput } from '@prisma/client/index';
+import { UserListResponse } from '@/form/user';
 
 /**
  * Default selector for Post.
@@ -27,7 +27,7 @@ export class UserRepositoryImpl implements UserRepository {
     return this.toModel(entity);
   }
 
-  async list(): Promise<UserModel[]> {
+  async list(): Promise<UserListResponse> {
     // const limit = input.limit ?? 50;
     // const { cursor } = input;
     const limit = 50;
@@ -41,15 +41,13 @@ export class UserRepositoryImpl implements UserRepository {
       orderBy: { createdAt: 'desc' },
     });
 
-    // TODO むずい。。
-    // const result = users.map((user) => User.reconstruct(user.id, user.name));
-    // return result;
-    return users;
+    const userList = users.map((user: User) => this.toModel(user));
+    return UserListResponse.create(userList);
   }
   async register(user: UserModel): Promise<UserModel> {
     const data = {
-      id: user.getId,
-      name: user.getName,
+      id: user.id,
+      name: user.name,
     };
     const entity = await prisma.user.create({
       data,
