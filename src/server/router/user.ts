@@ -1,9 +1,12 @@
 import { UserModel } from '@/domain/model/user';
 import { router, publicProcedure } from '@/server/index';
+import { use } from 'react';
 import { z } from 'zod';
+import { UserUseCase } from '../application/user';
 import { UserRepositoryImpl } from '../infrastructure/repository/user';
 
-const repository = new UserRepositoryImpl();
+// const repository = new UserRepositoryImpl();
+const useCase = new UserUseCase();
 
 export const userRouter = router({
   userList: publicProcedure
@@ -13,18 +16,7 @@ export const userRouter = router({
         cursor: z.string().nullish(),
       }),
     )
-    .query(async ({ input }) => {
-      /**
-       * For pagination docs you can have a look here
-       * @see https://trpc.io/docs/useInfiniteQuery
-       * @see https://www.prisma.io/docs/concepts/components/prisma-client/pagination
-       */
-      // const limit = input.limit ?? 50;
-      // const { cursor } = input;
-
-      // TODO limit cursorを渡す
-      return repository.list();
-    }),
+    .query(async ({ input }) => useCase.list()),
   userById: publicProcedure
     .input(
       z.object({
@@ -33,10 +25,10 @@ export const userRouter = router({
     )
     .query(async ({ input }) => {
       const { id } = input;
-      return repository.find(id);
+      return useCase.find(id);
     }),
   userCreate: publicProcedure.input(z.object({ name: z.string() })).mutation((req) => {
     const user = UserModel.create(req.input.name);
-    return repository.register(user);
+    return useCase.register(user);
   }),
 });
